@@ -42,7 +42,7 @@ def http_request(method, endpoint, payload=None, bearer_token=None, accept="appl
     req = Request(url, data=data, headers=headers, method=method)
 
     try:
-        with urlopen(req, timeout=10) as resp:
+        with urlopen(req, timeout=30) as resp:
             status = resp.status
             raw_body = resp.read().decode("utf-8")
             if "json" in resp.headers.get("Content-Type", ""):

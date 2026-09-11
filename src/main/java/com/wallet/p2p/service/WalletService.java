@@ -46,7 +46,6 @@ public class WalletService {
      *       single wallet that now exists in the DB.</li>
      * </ol>
      */
-    @Transactional
     public Wallet getOrCreateWallet(String userId, Long initialBalancePaise) {
         long initialBalance = (initialBalancePaise != null) ? initialBalancePaise : 0L;
 
