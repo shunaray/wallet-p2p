@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <includeMdcKeyName>correlation_id</includeMdcKeyName>
+            <includeMdcKeyName>user_id</includeMdcKeyName>
+            <includeMdcKeyName>wallet_id</includeMdcKeyName>
+            <includeMdcKeyName>transfer_id</includeMdcKeyName>
+            <includeMdcKeyName>event_type</includeMdcKeyName>
+            <fieldNames>
+                <timestamp>timestamp</timestamp>
+                <level>level</level>
+                <thread>thread</thread>
+                <logger>logger</logger>
+                <message>message</message>
+            </fieldNames>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="JSON_CONSOLE"/>
+    </root>
+
+    <!-- Silence verbose framework logs in production while keeping app logs detailed -->
+    <logger name="com.wallet.p2p" level="INFO"/>
+    <logger name="org.springframework.web" level="WARN"/>
+    <logger name="org.hibernate" level="WARN"/>
+    <logger name="com.zaxxer.hikari" level="WARN"/>
+</configuration>

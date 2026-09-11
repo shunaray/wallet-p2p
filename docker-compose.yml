@@ -1,0 +1,47 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: wallet-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: walletdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d walletdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - wallet-net
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wallet-service
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/walletdb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      HIKARI_MAX_POOL_SIZE: 20
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - wallet-net
+
+networks:
+  wallet-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
