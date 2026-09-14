@@ -25,8 +25,9 @@ public class AuthFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String path = request.getRequestURI();
 
-        // Allow actuator, logs, and swagger/openapi endpoints without auth
-        if (path.startsWith("/actuator") || path.startsWith("/logs") || path.startsWith("/error")) {
+        // Allow root, actuator, logs, swagger/openapi, and error endpoints without auth
+        if (path.equals("/") || path.startsWith("/actuator") || path.startsWith("/logs") 
+                || path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs") || path.startsWith("/error")) {
             filterChain.doFilter(request, response);
             return;
         }
